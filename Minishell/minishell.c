@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/08 19:56:13 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/08 20:07:15 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -486,7 +486,7 @@ void	free_nodes(t_command_d *t)
 		t = s;
 	}	
 }
-int	ft_strcmp(const char *s1, const char *s2)
+int	ft_strcmp_(const char *s1, const char *s2)
 {
 	int				i;
 	unsigned char	*cs1;
@@ -508,7 +508,7 @@ char* find(t_command_d	*t, t_env	*enva)
 	while(enva)
 	{
 		
-		if(ft_strcmp(t->content ,enva->variable) == 0)
+		if(ft_strcmp_(t->content ,enva->variable) == 0)
 			return (enva->value);
 		enva = enva->next;	
 	}

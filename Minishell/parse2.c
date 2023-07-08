@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:13:10 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/08 19:54:59 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/08 20:34:09 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,7 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 			// printf("--%d--",   i);
 			// p->command[i] = 0;
 		}
-		if (t && !test2(t) &&  !(t->token == SPACE && t->state == GENERALE) && !(t->token == TAB && t->state == GENERALE)) 
+		if (t && !test2(t) &&  !(t->token == SPACE && t->state == GENERALE) && !(t->token == TAB && t->state == GENERALE) && !(t->token == PIPE && t->state == GENERALE)) 
 		{
 			
 			p->command[i] = calloc(1,sizeof(char));
@@ -222,12 +222,16 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 					{
 						p->command[i] = ft_strjoin(p->command[i], t->content);
 					}
-				if(t)
+				if (t)
 					t = t->next;
 			}
+			printf("hada--%d--",   i);
+			if (i == 2)
+				printf("ghna %s--",t->content);
+			
 			i++;
-			// printf("hada--%d--",   i);
-			// p->command[i] = 0;
+			
+			p->command[i] = 0;
 		}
 		if (test2(t))
 		{
@@ -249,11 +253,11 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 					&& !(t->token == QUOTES && t->state == GENERALE)
 					&& !(t->token == SQUOTES && t->state == GENERALE))
 					{
-						printf("talo9i");
+						// printf("talo9i");
 						s = ft_strjoin(s, t->content);
 						
 					}
-					printf("--%d--",   i);
+					// printf("--%d--",   i);
 					if(t)
 					t = t->next;
 				}
@@ -262,13 +266,15 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 		}
 		if(t && t->token == PIPE)
 		{
+				i = 0;
 			// p->command[i] = 0;
 			p = p->next;
-			i = 0;
+		
 		}
 		if (t)
 			t = t->next;
 	}
+	
 }
 
 

@@ -276,7 +276,7 @@ void parse_129(t_command_d *t, t_pcommand_d **p)
 		{
 			printf("    %s    ",(*p)->command[i]);
 			printf("pipe");
-			printf("%d",t->token);
+			// printf("%d",t->token);
 			(*p) = (*p)->next;
 		}
 		if (t)
