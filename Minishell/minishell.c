@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/06 15:50:00 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/08 15:17:26 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,21 @@
 	// SSQUOTES = 12,
 	// HERDOCK = 13,
 	// REDIRECT_IN = 14,
-
+int count(t_command_d	*t, int search)
+{
+	int i;
+	
+	i = 0;
+	while(t)
+	{
+		if(t->token == search)
+			i++;
+		t = t->next;
+	}
+	if(i == 1)
+		return (1);
+	return(0);
+}
 
 int count_words(t_command_d *t)
 {
@@ -112,7 +126,7 @@ int ft_strlen_m(char *p, int i, int *v)
 	b = 0;
 	counter = 0;
 	
-	if(p[i] == '"' || p[i] == '|' || p[i] == '\'' || p[i] == ' '|| p[i] == '<' || p[i] == '>' || p[i] == 9 || p[i] == 11 || (p[i] == '$'  && (p[i + 1] && (!(p[i + 1] >= '0' && p[i + 1] <= '9') && p[i + 1] != '@' && p[i + 1] != '$'))))
+	if(p[i] == '"' || p[i] == '|' || p[i] == '\'' || p[i] == ' '|| p[i] == '<' || p[i] == '>' || p[i] == 9 || p[i] == 11 || (p[i] == '$'  && (p[i + 1] && (!(p[i + 1] >= '0' && p[i + 1] <= '9') && p[i + 1] != '@' && p[i + 1] != '$' && p[i + 1] != '?'))))
 	{
 		
 		 if(p[i] == '|')
@@ -150,6 +164,7 @@ int ft_strlen_m(char *p, int i, int *v)
 		}
 		else if (p[i] == '$' && (p[i + 1] && !(p[i + 1] >= '0' && p[i + 1] <= '9')))
 		{
+			printf("ssss");
 			i++;
 			counter++;
 			while(p[i] && !(p[i] == '$' ||p[i] == '"' ||p[i] == '|' || p[i] == '<' || p[i] == '>' || p[i] == '\'' || p[i] == ' ' || p[i] == '@'))
@@ -162,13 +177,20 @@ int ft_strlen_m(char *p, int i, int *v)
 		}
 		return(1);
 	}
-	while (p[i] && !(p[i] == '"' ||p[i] == '|' || p[i] == '<' || p[i] == '>' || p[i] == '\'' || p[i] == ' ' || p[i] == 9 || p[i] == 11 ))
+	if(p[i] == '$' && (p[i + 1] && p[i + 1] == '?'))
 	{
+		*v = EXIT_STATUS;
+		return (2);
+	}
+	while (p[i] && !(p[i] == '"' ||p[i] == '|' || p[i] == '<' || p[i] == '>' || p[i] == '\'' || p[i] == ' ' || p[i] == 9 || p[i] == 11))
+	{
+		if((p[i] == '$' && (p[i + 1] && !(p[i + 1] >= '0' && p[i + 1] <= '9')  && p[i + 1] != '$')))
+			return(counter);
 		*v = WORD;
 		counter++;
 		i++;
 	}
-	return(counter++);
+	return(counter);
 }
 
 char *cp(char *p, int lent, int *s)
@@ -237,7 +259,7 @@ void detect_state(t_command_d	*t)
 	}
 }
 
-int	DETECT_QUOTES2(t_command_d *t)
+int	DETECT_QUOTES2(t_command_d *t, int *exit_s)
 {
 	int D_QUOTES;
 	int S_QUOTES;
@@ -260,11 +282,16 @@ int	DETECT_QUOTES2(t_command_d *t)
 		}
 		t = t->next;
 	}
+	
 	if(!D_QUOTES && !S_QUOTES)
+	{
+		*exit_s = 0;
 		return(1);
+	}
+	*exit_s = 1;
 	return(0);
 }
-void	DETECT_QUOTES(t_command_d	*t)
+int		DETECT_QUOTES(t_command_d	*t, int *exit_s)
 {
 	int D_QUOTES;
 	int S_QUOTES;
@@ -283,16 +310,14 @@ void	DETECT_QUOTES(t_command_d	*t)
 			S_QUOTES = 0;				
 		t = t->next;
 	}
-	if(D_QUOTES)
+	if(D_QUOTES || S_QUOTES)
 	{
-		write(2, "you forget to close double quotes\n", 34);
-		exit(1);
+		*exit_s = 0;
+		return(1);
 	}
-	if(S_QUOTES)
-	{
-		write(2, "you forget to close single quotes\n", 27);
-		exit(1);
-	}
+	*exit_s = 1;
+	return(0);
+	
 }
 
 int test(t_command_d	*t)
@@ -326,13 +351,18 @@ void increment_init(int * existing_pipe, int *ex_word, int *b_pipe)
 	*ex_word = 1;
 	*b_pipe = *b_pipe + 1;
 }
-int pipe_red_test(t_command_d	*t, int SEARCH)
+int pipe_red_test(t_command_d	*t, int SEARCH, int *exit_s)
 {
 	int		b_pipe;
 	int		ex_word;
 	int		existing_pipe;
 	
 	init_pipe_red(&ex_word, &b_pipe, &existing_pipe);
+	if (!count(t, PIPE))
+	{
+		*exit_s = 0;
+		return(1);
+	}
 	while (t)
 	{
 		if ((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD) && ex_word == 0)
@@ -347,9 +377,26 @@ int pipe_red_test(t_command_d	*t, int SEARCH)
 		t = t->next;
 	}
 	if (b_pipe >= 1)
+	{
+		*exit_s = 0;
 		return(1);
+	}
+	*exit_s = 1;
 	return(0);
 }
+
+int		pipe_search(t_command_d	*t, int SEARCH, int *exit_s)
+{
+	int		f_pipe;
+	
+	f_pipe = 0;
+	while (t)
+	{
+		
+		t = t->next;
+	}
+	return (0);
+}	
 
 int herdock_pos(t_command_d	*t, int search)
 {
@@ -367,48 +414,71 @@ int herdock_pos(t_command_d	*t, int search)
 }
 
 
-int count(t_command_d	*t, int search)
-{
-	int i;
-	
-	i = 0;
-	while(t)
-	{
-		if(t->token == search)
-			i++;
-		t = t->next;
-	}
-	if(i == 1)
-		return (1);
-	return(0);
-}
 
-int herdock_redirect_test(t_command_d	*t ,int search)
+
+int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 {
 	int		b_herdock;
 	int		ex_word;
 	int		pos;
 	int 	h_pos;
 	int		c_red_herdock;
-
+		printf("noo");
 	pos = 0;
 	c_red_herdock = count(t, search);
 	ex_word = 0;
 	b_herdock = 0;
-	
+
 	h_pos = herdock_pos(t, search);
 	if(c_red_herdock == 0)
+	{
+		printf("|MATGOLHACHE %d|",search); 
+		*exit_s = 0;
 		return(1);
+	}
 	while (t)
 	{
-	if(b_herdock == 1 && test(t))
-		return(0);
-	else if (h_pos < pos && (t->token == WORD || t->token == QUOTES || t->token == SQUOTES) && ex_word == 0 )
-		return(1);
-		pos++;
+		
+	// if(b_herdock == 1 && test(t))
+	// {
+		
+	// 	*exit_s = 258;
+	// 	return(0);
+	// }
+	// else if (h_pos < pos && (t->token == WORD || t->token == QUOTES || t->token == SQUOTES) && ex_word == 0 )
+	// {
+	// 	*exit_s = 0;
+	// 	return(1);
+	// }
+	// 	pos++;
+		if(b_herdock >= 1 && test(t))
+		{
+			*exit_s = 258;
+			return(0);
+		}
+		else if(t->token == search && t->state == GENERALE)
+		{
+			
+			b_herdock++;
+			printf("-%d-\n",b_herdock);
+		}
+		else if((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD)&& b_herdock >= 1) 	
+		{
+			b_herdock--;
+			printf("-%d-\n",b_herdock);
+		}
 		t = t->next;
 	}
+	if(b_herdock ==0)
+	{
+	
+		*exit_s = 0;
+		return(1);
+	}
+	
+	*exit_s = 258;
 	return(0);
+	
 }
 void	free_nodes(t_command_d *t)
 {
@@ -487,15 +557,41 @@ void	expend(t_command_d	*t, t_env	*enva)
 		t = t->next;
 	}
 }
+
+void	expend_exit(t_command_d	*t, t_env	*enva, int exit_s)
+{
+	char *s;
+	
+	int previoush;
+	int previous ;
+	
+	init_expend(&previous, &previoush);
+	while(t)
+	{
+		if(t->token == HERDOCK)
+			previoush = 1;
+		else if(previoush != 0 && t->token != HERDOCK && (t->state != SDQUOTES || t->state != SSQUOTES))
+		{
+			previous = 1;
+		}
+		else if(t->token == SPACE && (t->state != SDQUOTES || t->state != SSQUOTES) && previous == 1)
+			init_expend(&previous, &previoush);	
+		else if(t->token == EXIT_STATUS && previoush == 0 && (t->state == GENERALE || t->state == SDQUOTES))
+				t->content = ft_strdup(ft_itoa(exit_s));
+		t = t->next;
+	}
+}
+
 int		main(int argc, char* argv[], char* envp[])
 {
-	char			**splited;
+	int 			exit_s;
+	int 			exit_p;
 	char			*read;
 	t_command_d		*t;
 	t_pcommand_d	*p;
 	 t_env	* enva;
 	
-	
+	exit_s = 0;
 	while (1)
 	{
 		t = 0;
@@ -508,56 +604,25 @@ int		main(int argc, char* argv[], char* envp[])
 		split_parse(read, &t);
 		
 		detect_state(t);
-		if(DETECT_QUOTES2(t))
-			printf("cotes\n");
-		else
-			printf("error cotes\n");
-
+		exit_p = exit_s;
+		if(DETECT_QUOTES2(t, &exit_s) && herdock_redirect_test(t, REDIRECT_IN,&exit_s) && herdock_redirect_test(t, REDIRECT, &exit_s) &&
+		herdock_redirect_test(t, REDIRECT_IN, &exit_s) && herdock_redirect_test(t, APPEND, &exit_s) && herdock_redirect_test(t, HERDOCK, &exit_s) && pipe_red_test(t , PIPE,&exit_s))
+		{
 			
-		if(pipe_red_test(t , PIPE))
-			printf("pipe\n");
-		else
-			printf("error pipe\n");
-			
-		if(herdock_redirect_test(t, REDIRECT_IN))
-			printf("redirect in\n");
-		else
-			printf("error redirect in\n");
-		if(herdock_redirect_test(t, HERDOCK))
-			printf("herdok\n");
-		else
-			printf("error herdok\n");
-		if(herdock_redirect_test(t, REDIRECT))
-			printf("REDIRECT\n");
-		else
-			printf("ERROR REDIRECT\n");
-		if(herdock_redirect_test(t, REDIRECT))
-			printf("REDIRECT\n");
-		else
-			printf("ERROR REDIRECT\n");
-		if(herdock_redirect_test(t, APPEND))
-			printf("APPEND\n");
-		else
-			printf("error APPEND\n");
 		printf("	content		|	token	|	state	\n");
 		printf("	______________________________________________\n");
-		// while(t)
-		// {
-		// 	printf("   %s              %d              %d\n",t->content,t->token,t->state);
-		// 	t = t->next;
-		// }
 		expend(t, enva);
+		expend_exit(t, enva, exit_p);
 		parse_200(t, &p);
 		int i;
 		while (p)
 		{
+			
 			i = 0;
 			printf("--------------cmd-------------\n");
 			while (p->command[i])
 			{
-				
-				
-				printf("%s\n",p->command[i]);
+				printf("||%s||\n",p->command[i]);
 				i++;	
 			}
 			printf("--------------file-------------\n");	
@@ -568,6 +633,7 @@ int		main(int argc, char* argv[], char* envp[])
 				}
 			printf("--------------next cmd-------------\n");	
 			p = p->next;
+		}
 		}
 	}
 		

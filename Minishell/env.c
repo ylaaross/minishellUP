@@ -6,22 +6,13 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 19:20:00 by asaber            #+#    #+#             */
-/*   Updated: 2023/06/21 21:13:30 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/06 19:12:42 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "Minishell.h"
 
-// int ft_strlen(char *str)
-// {
-// 	int i;
-	
-// 	i=0;
-// 	while(str[i])
-// 		i++;
-// 	return(i);
-// }
 char	*cut_first(char *env)
 {
 	int		i;

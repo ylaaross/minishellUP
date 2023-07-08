@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 19:46:25 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/06/24 22:18:33 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/06 21:43:02 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,15 @@ typedef struct command_devide
 
 typedef struct file
 {
-	char *file_name;
-	int type;
+	char		*file_name;
+	int			type;
 	struct file *next;
 }t_file;
 
 typedef struct parsed_command
 {
-	char				**command;
+	char					**command;
+	int						exit_status;
 	struct parsed_command	*next;
 	t_file	*file;
 }t_pcommand_d;
@@ -64,6 +65,7 @@ int		ft_strlen(char *str);
 char	*ft_strdup(char *s1);
 void	fifo(t_command_d **head, char* str, int v);
 t_file	*fifo_file(t_file *head, char* str, int v);
+char	*ft_itoa(int n);
 enum token{
 	WORD = 1,
 	SPACE = 2,
@@ -80,4 +82,5 @@ enum token{
 	HERDOCK = 13,
 	REDIRECT_IN = 14,
 	TAB = 15,
+	EXIT_STATUS =16,
 };	

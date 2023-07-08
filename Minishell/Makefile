@@ -2,7 +2,7 @@ CC = CC
 
  FLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 
-SRC	= minishell.c parse2.c ft_strdup.c env.c linked_data.c
+SRC	= minishell.c parse2.c ft_strdup.c env.c linked_data.c ft_itoa.c
 
 OBJ	= $(SRC:.c=.o)
 
