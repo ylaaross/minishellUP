@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:13:10 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/08 15:52:49 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/08 19:54:59 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,10 +150,10 @@ void command_mallocate(t_command_d *t , t_pcommand_d **p)
 
 	i = 0;
 	npipe	= command_number(t);
-	printf("||||||||||||%d|||||||||||||||||||\n", npipe);
+	// printf("||||||||||||%d|||||||||||||||||||\n", npipe);
 	while(i < npipe)
 	{
-		fifo_cmd(p , 1);
+		fifo_cmd(p);
 		i++;
 	}
 }
@@ -172,7 +172,6 @@ void commande_per_pipe(t_command_d *t , t_pcommand_d *p)
 	i = 0;
 	while(i < npipe)
 	{
-		printf("count -||%d||-", count_words(t));
 		p->command = calloc((count_words(t) + 1), sizeof(char*));
 		if (i < npipe - 1)
 		{
@@ -186,7 +185,6 @@ void commande_per_pipe(t_command_d *t , t_pcommand_d *p)
 void parse_127(t_command_d *t, t_pcommand_d *p)
 {
 	int i;
-	t_file *f;
 	char *s;
 	int	token;
 	
@@ -199,12 +197,12 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 		!(t->next->next))
 		)
 		{
-			printf("WTF");
+			// printf("WTF");
 			p->command[i] = malloc(sizeof(char));
 			p->command[i][0] = '\0';
 			t = t->next;
 			i++;
-			printf("--%d--",   i);
+			// printf("--%d--",   i);
 			// p->command[i] = 0;
 		}
 		if (t && !test2(t) &&  !(t->token == SPACE && t->state == GENERALE) && !(t->token == TAB && t->state == GENERALE)) 
@@ -222,14 +220,13 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 				&& !(t->token == QUOTES && t->state == GENERALE)
 				&& !(t->token == SQUOTES && t->state == GENERALE))
 					{
-							printf("lbts\n");
 						p->command[i] = ft_strjoin(p->command[i], t->content);
 					}
 				if(t)
 					t = t->next;
 			}
 			i++;
-			printf("hada--%d--",   i);
+			// printf("hada--%d--",   i);
 			// p->command[i] = 0;
 		}
 		if (test2(t))
@@ -272,7 +269,6 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 		if (t)
 			t = t->next;
 	}
-	printf("hada   %d",i);
 }
 
 

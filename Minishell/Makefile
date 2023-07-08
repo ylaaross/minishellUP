@@ -14,7 +14,7 @@ $(Name) : $(OBJ)
 	$(CC) -lreadline $(FLAGS) $^ -o $@
 
 %.o:%.c
-	$(CC)  $(CFLAGS)  -c $^ -o $@
+	$(CC)  $(FLAGS)  -c $^ -o $@
 
 clean : 
 	rm -rf $(OBJ)

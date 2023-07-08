@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/08 15:17:26 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/08 19:56:13 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	fifo(t_command_d **head, char* str, int v)
 		t->next->next = 0;
 	}
 }
-void	fifo_cmd(t_pcommand_d **head, int v)
+void	fifo_cmd(t_pcommand_d **head)
 {
 	t_pcommand_d	*t;
 
@@ -100,8 +100,6 @@ void	fifo_cmd(t_pcommand_d **head, int v)
 	{
 		*head = malloc(sizeof(t_pcommand_d));
 		(*head)->file = 0;
-		// (*head)->content = str;
-		// (*head)->token = v;
 		(*head)->next = 0;
 	}
 	else
@@ -110,10 +108,7 @@ void	fifo_cmd(t_pcommand_d **head, int v)
 		while (t->next)
 			t = t->next;
 		t->next = malloc(sizeof(t_pcommand_d));
-		// (*head)->file = 0;
 		t->next->file = 0;
-		// t->next->content = str;
-		// t->next->token = v;
 		t->next->next = 0;
 	}
 }
@@ -385,18 +380,18 @@ int pipe_red_test(t_command_d	*t, int SEARCH, int *exit_s)
 	return(0);
 }
 
-int		pipe_search(t_command_d	*t, int SEARCH, int *exit_s)
-{
-	int		f_pipe;
+// int		pipe_search(t_command_d	*t, int SEARCH, int *exit_s)
+// {
+// 	int		f_pipe;
 	
-	f_pipe = 0;
-	while (t)
-	{
+// 	f_pipe = 0;
+// 	while (t)
+// 	{
 		
-		t = t->next;
-	}
-	return (0);
-}	
+// 		t = t->next;
+// 	}
+// 	return (0);
+// }	
 
 int herdock_pos(t_command_d	*t, int search)
 {
@@ -423,7 +418,7 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 	int		pos;
 	int 	h_pos;
 	int		c_red_herdock;
-		printf("noo");
+		// printf("noo");
 	pos = 0;
 	c_red_herdock = count(t, search);
 	ex_word = 0;
@@ -432,7 +427,7 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 	h_pos = herdock_pos(t, search);
 	if(c_red_herdock == 0)
 	{
-		printf("|MATGOLHACHE %d|",search); 
+		// printf("|MATGOLHACHE %d|",search); 
 		*exit_s = 0;
 		return(1);
 	}
@@ -494,7 +489,6 @@ void	free_nodes(t_command_d *t)
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	int				i;
-	int				len;
 	unsigned char	*cs1;
 	unsigned char	*cs2;
 
@@ -558,10 +552,8 @@ void	expend(t_command_d	*t, t_env	*enva)
 	}
 }
 
-void	expend_exit(t_command_d	*t, t_env	*enva, int exit_s)
+void	expend_exit(t_command_d	*t, int exit_s)
 {
-	char *s;
-	
 	int previoush;
 	int previous ;
 	
@@ -589,9 +581,12 @@ int		main(int argc, char* argv[], char* envp[])
 	char			*read;
 	t_command_d		*t;
 	t_pcommand_d	*p;
-	 t_env	* enva;
+	t_env	* enva;
 	
+	p = 0;
 	exit_s = 0;
+	(void)argc;
+	(void)argv;
 	while (1)
 	{
 		t = 0;
@@ -612,7 +607,7 @@ int		main(int argc, char* argv[], char* envp[])
 		printf("	content		|	token	|	state	\n");
 		printf("	______________________________________________\n");
 		expend(t, enva);
-		expend_exit(t, enva, exit_p);
+		expend_exit(t, exit_p);
 		parse_200(t, &p);
 		int i;
 		while (p)

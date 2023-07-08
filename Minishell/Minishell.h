@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 19:46:25 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/06 21:43:02 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/08 19:50:43 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_env	*__fill_env(char **env);
 int		ft_strlen(char *str);
 int		test(t_command_d	*t);
 int 	count_words(t_command_d *t);
-void	fifo_cmd(t_pcommand_d **head, int v);
+void	fifo_cmd(t_pcommand_d **head);
 void 	parse_129(t_command_d *t, t_pcommand_d **p);
 void 	parse_200(t_command_d *t, t_pcommand_d **p);
 void 	parse_127(t_command_d *t, t_pcommand_d *p);
