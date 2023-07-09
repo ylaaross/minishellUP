@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/08 20:07:15 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/09 14:59:12 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int count_words(t_command_d *t)
 			b = 0;
 		}
 		t = t->next;
+		printf("%d",count);
 	}
 	return(count);
 }
@@ -159,7 +160,7 @@ int ft_strlen_m(char *p, int i, int *v)
 		}
 		else if (p[i] == '$' && (p[i + 1] && !(p[i + 1] >= '0' && p[i + 1] <= '9')))
 		{
-			printf("ssss");
+			// printf("ssss");
 			i++;
 			counter++;
 			while(p[i] && !(p[i] == '$' ||p[i] == '"' ||p[i] == '|' || p[i] == '<' || p[i] == '>' || p[i] == '\'' || p[i] == ' ' || p[i] == '@'))
@@ -455,12 +456,12 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 		{
 			
 			b_herdock++;
-			printf("-%d-\n",b_herdock);
+			// printf("-%d-\n",b_herdock);
 		}
 		else if((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD)&& b_herdock >= 1) 	
 		{
 			b_herdock--;
-			printf("-%d-\n",b_herdock);
+			// printf("-%d-\n",b_herdock);
 		}
 		t = t->next;
 	}

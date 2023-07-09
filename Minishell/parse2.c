@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:13:10 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/08 22:26:48 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/09 15:16:23 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int test2(t_command_d	*t)
 		{
 			if(token_t[i] == t->token)
 			{
-				printf("%d %s\n",t->token,t->content);
+				// printf("%d %s\n",t->token,t->content);
 				return (1);
 			}
 			i++;
@@ -150,12 +150,12 @@ void command_mallocate(t_command_d *t , t_pcommand_d **p)
 
 	i = 0;
 	npipe	= command_number(t);
-	// printf("||||||||||||%d|||||||||||||||||||\n", npipe);
 	while(i < npipe)
 	{
 		fifo_cmd(p);
 		i++;
 	}
+	printf("  %d    ",npipe);
 }
 void pass_pipe(t_command_d **t)
 {
@@ -180,6 +180,7 @@ void commande_per_pipe(t_command_d *t , t_pcommand_d *p)
 		}
 		i++;
 	}
+	
 }
 
 void parse_127(t_command_d *t, t_pcommand_d *p)
@@ -197,13 +198,12 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 		!(t->next->next))
 		)
 		{
-			// printf("WTF");
-			p->command[i] = malloc(sizeof(char));
+			p->command[i] = calloc(1,sizeof(char));
 			p->command[i][0] = '\0';
 			t = t->next;
+			t = t->next;
+			printf("lbts");
 			i++;
-			// printf("--%d--",   i);
-			// p->command[i] = 0;
 		}
 		if (t && !test2(t) &&  !(t->token == SPACE && t->state == GENERALE) && !(t->token == TAB && t->state == GENERALE) && !(t->token == PIPE && t->state == GENERALE)) 
 		{
@@ -249,23 +249,19 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 					&& !(t->token == QUOTES && t->state == GENERALE)
 					&& !(t->token == SQUOTES && t->state == GENERALE))
 					{
-						// printf("talo9i");
 						s = ft_strjoin(s, t->content);
 						
 					}
-					// printf("--%d--",   i);
 					if(t)
 					t = t->next;
 				}
 				p->file = fifo_file(p->file, s, token);
 			}
 		}
-		if(t && t->token == PIPE)
+		if(t && t->token == PIPE && t->state == GENERALE)
 		{
-				i = 0;
-			// p->command[i] = 0;
+			i = 0;
 			p = p->next;
-		
 		}
 		if (t)
 			t = t->next;
