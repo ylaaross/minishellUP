@@ -1,0 +1,6 @@
+typedef struct env
+{
+	char		*variable;
+	char		*value;
+	struct env	*next;
+}	t_env;
