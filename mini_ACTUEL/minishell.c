@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/09 19:18:35 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/09 20:28:56 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int count(t_command_d	*t, int search)
 			i++;
 		t = t->next;
 	}
-	if(i == 1)
+	if(i >= 1)
 		return (1);
 	return(0);
 }
@@ -359,7 +359,6 @@ int pipe_red_test(t_command_d	*t, int SEARCH, int *exit_s)
 		else if(t->token == SEARCH && t->state != SDQUOTES && t->state != SSQUOTES ) 
 		{
 			existing_pipe = 1;
-			printf("%d",t->state);
 			ex_word = 0;
 			b_pipe--;
 		}
@@ -412,7 +411,7 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 	int		pos;
 	int 	h_pos;
 	int		c_red_herdock;
-		// printf("noo");
+	
 	pos = 0;
 	c_red_herdock = count(t, search);
 	ex_word = 0;
@@ -421,46 +420,26 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 	h_pos = herdock_pos(t, search);
 	if(c_red_herdock == 0)
 	{
-		// printf("|MATGOLHACHE %d|",search); 
 		*exit_s = 0;
 		return(1);
 	}
 	while (t)
 	{
 		
-	// if(b_herdock == 1 && test(t))
-	// {
 		
-	// 	*exit_s = 258;
-	// 	return(0);
-	// }
-	// else if (h_pos < pos && (t->token == WORD || t->token == QUOTES || t->token == SQUOTES) && ex_word == 0 )
-	// {
-	// 	*exit_s = 0;
-	// 	return(1);
-	// }
-	// 	pos++;
-		if(b_herdock >= 1 && test(t))
-		{
-			*exit_s = 258;
-			return(0);
-		}
-		else if(t->token == search && t->state == GENERALE)
-		{
-			
+		// if(b_herdock >= 1 && test(t))
+		// {
+		// 	*exit_s = 258;
+		// 	return(0);
+		// }
+		if(t->token == search && t->state == GENERALE)
 			b_herdock++;
-			printf("-%d-\n",b_herdock);
-		}
-		else if((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD)&& b_herdock >= 1) 	
-		{
+		if((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD)&& b_herdock >= 1) 	
 			b_herdock--;
-			printf("-%d-\n",b_herdock);
-		}
 		t = t->next;
 	}
-	if(b_herdock ==0)
+	if(b_herdock == 0)
 	{
-	
 		*exit_s = 0;
 		return(1);
 	}
