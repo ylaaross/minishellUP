@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:13:10 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/08 20:34:09 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:26:48 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,10 +225,6 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 				if (t)
 					t = t->next;
 			}
-			printf("hada--%d--",   i);
-			if (i == 2)
-				printf("ghna %s--",t->content);
-			
 			i++;
 			
 			p->command[i] = 0;
