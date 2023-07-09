@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaber <asaber@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:13:10 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/09 17:06:14 by asaber           ###   ########.fr       */
+/*   Updated: 2023/07/09 18:40:20 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int test2(t_command_d	*t)
 		{
 			if(token_t[i] == t->token)
 			{
-				printf("%d %s\n",t->token,t->content);
+				// printf("%d %s\n",t->token,t->content);
 				return (1);
 			}
 			i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaber <asaber@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/09 17:51:09 by asaber           ###   ########.fr       */
+/*   Updated: 2023/07/09 19:18:35 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,6 @@
 #include<readline/history.h>
 #include "minishell.h"
 
-	// WORD = 1,
-	// SPACE = 2,
-	// ENV = 3,
-	// PIPE = 4,
-	// QUOTES = 5,
-	// SQUOTES = 6,
-	// APPEND = 7,
-	// REDIRECT = 8,
-	// VARIABLE = 9,
-	// GENERALE = 10,
-	// SDQUOTES = 11,
-	// SSQUOTES = 12,
-	// HERDOCK = 13,
-	// REDIRECT_IN = 14,
 int count(t_command_d	*t, int search)
 {
 	int i;
@@ -121,9 +107,20 @@ int ft_strlen_m(char *p, int i, int *v)
 	b = 0;
 	counter = 0;
 	
-	if(p[i] == '"' || p[i] == '|' || p[i] == '\'' || p[i] == ' '|| p[i] == '<' || p[i] == '>' || p[i] == 9 || p[i] == 11 || (p[i] == '$'  && (p[i + 1] && (!(p[i + 1] >= '0' && p[i + 1] <= '9') && p[i + 1] != '@' && p[i + 1] != '$' && p[i + 1] != '?'))))
+	if(p[i] == '"' || p[i] == '|' || p[i] == '\'' || p[i] == ' '|| p[i] == '<' || p[i] == '>' || p[i] == 9 || p[i] == 11 || 
+	
+	(p[i] == '$' && (p[i + 1] && (ft_isalpha(p[i + 1]) || p[i + 1] == '_')))
+	)
+	
+	
+	// (p[i] == '$'  && (p[i + 1] && (!(p[i + 1] >= '0' && p[i + 1] <= '9') && p[i + 1] != '@' && p[i + 1] != '^' && p[i + 1] != '/' && p[i + 1] != '=' && p[i + 1] != '+' && p[i + 1] != '*'
+	// && p[i + 1] != '-' && p[i + 1] != '$' && p[i + 1] != '?')))
+	
+	
+	
+	
+
 	{
-		
 		 if(p[i] == '|')
 			*v = PIPE;
 		else if(p[i] == ' ')
@@ -159,10 +156,9 @@ int ft_strlen_m(char *p, int i, int *v)
 		}
 		else if (p[i] == '$' && (p[i + 1] && !(p[i + 1] >= '0' && p[i + 1] <= '9')))
 		{
-			printf("ssss");
 			i++;
 			counter++;
-			while(p[i] && !(p[i] == '$' ||p[i] == '"' ||p[i] == '|' || p[i] == '<' || p[i] == '>' || p[i] == '\'' || p[i] == ' ' || p[i] == '@'))
+			while(p[i] && (ft_isalnum(p[i]) || p[i]=='_'))
 			{
 				counter++;
 				i++;
@@ -179,8 +175,6 @@ int ft_strlen_m(char *p, int i, int *v)
 	}
 	while (p[i] && !(p[i] == '"' ||p[i] == '|' || p[i] == '<' || p[i] == '>' || p[i] == '\'' || p[i] == ' ' || p[i] == 9 || p[i] == 11))
 	{
-		if((p[i] == '$' && (p[i + 1] && !(p[i + 1] >= '0' && p[i + 1] <= '9')  && p[i + 1] != '$')))
-			return(counter);
 		*v = WORD;
 		counter++;
 		i++;
@@ -610,27 +604,26 @@ int		main(int argc, char* argv[], char* envp[])
 		expend(t, enva);
 		expend_exit(t, exit_p);
 		parse_200(t, &p);
-		// int i;
-		// while (p)
-		// {
-			
-		// 	i = 0;
-		// 	printf("--------------cmd-------------\n");
-		// 	while (p->command[i])
-		// 	{
-		// 		printf("||%s||\n",p->command[i]);
-		// 		i++;	
-		// 	}
-		// 	printf("--------------file-------------\n");	
-		// 		while(p->file)
-		// 		{
-		// 			printf("%s    %d\n",p->file->file_name,p->file->type);
-		// 			p->file= p->file->next;	
-		// 		}
-		// 	printf("--------------next cmd-------------\n");	
-		// 	p = p->next;
-		// }
-		do_command(p->command);
+		int i;
+		while (p)
+		{
+			i = 0;
+			printf("--------------cmd-------------\n");
+			while (p->command[i])
+			{
+				printf("||%s||\n",p->command[i]);
+				i++;	
+			}
+			printf("--------------file-------------\n");	
+				while(p->file)
+				{
+					printf("%s    %d\n",p->file->file_name,p->file->type);
+					p->file= p->file->next;	
+				}
+			printf("--------------next cmd-------------\n");	
+			p = p->next;
+		}
+		// do_command(p->command);
 		}
 	}
 	return (0);
