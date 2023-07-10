@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:13:10 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/09 18:40:20 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/10 12:49:50 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,14 +197,11 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 		!(t->next->next))
 		)
 		{
-			// printf("WTF");
 			p->command[i] = malloc(sizeof(char));
 			p->command[i][0] = '\0';
 			t = t->next;
 			t = t->next;
 			i++;
-			// printf("--%d--",   i);
-			// p->command[i] = 0;
 		}
 		if (t && !test2(t) &&  !(t->token == SPACE && t->state == GENERALE) && !(t->token == TAB && t->state == GENERALE) && !(t->token == PIPE && t->state == GENERALE)) 
 		{

@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/09 20:28:56 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/10 13:12:18 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,12 @@ int ft_strlen_m(char *p, int i, int *v)
 		*v = EXIT_STATUS;
 		return (2);
 	}
-	while (p[i] && !(p[i] == '"' ||p[i] == '|' || p[i] == '<' || p[i] == '>' || p[i] == '\'' || p[i] == ' ' || p[i] == 9 || p[i] == 11))
+	if(p[i] == '$')
+	{
+		*v = WORD;
+		return (2);
+	}
+	while (p[i] && !(p[i] == '"' ||p[i] == '|' || p[i] == '<' || p[i] == '>' || p[i] == '\'' || p[i] == ' ' || p[i] == 9 || p[i] == 11 || p[i] == '$'))
 	{
 		*v = WORD;
 		counter++;
