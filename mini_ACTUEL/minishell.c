@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/10 13:12:18 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:26:50 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -359,7 +359,12 @@ int pipe_red_test(t_command_d	*t, int SEARCH, int *exit_s)
 	}
 	while (t)
 	{
-		if ((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD) && ex_word == 0)
+		// if(existing_pipe >= 1 && test(t))
+		// {
+		// 	*exit_s = 258;
+		// 	return(0);
+		// }
+		if ((t->token == QUOTES || t->token == SQUOTES || t->token == WORD || t->token == VARIABLE) && ex_word == 0)
 			increment_init(&existing_pipe, &ex_word, &b_pipe);
 		else if(t->token == SEARCH && t->state != SDQUOTES && t->state != SSQUOTES ) 
 		{
@@ -432,14 +437,14 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 	{
 		
 		
-		// if(b_herdock >= 1 && test(t))
-		// {
-		// 	*exit_s = 258;
-		// 	return(0);
-		// }
+		if(b_herdock >= 1 && test(t))
+		{
+			*exit_s = 258;
+			return(0);
+		}
 		if(t->token == search && t->state == GENERALE)
 			b_herdock++;
-		if((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD)&& b_herdock >= 1) 	
+		if((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD || t->token == VARIABLE)&& b_herdock >= 1) 	
 			b_herdock--;
 		t = t->next;
 	}
@@ -519,7 +524,10 @@ void	expend(t_command_d	*t, t_env	*enva)
 		{
 			s = find(t, enva);
 			if(s)
-				t->content = ft_strdup(find(t, enva));
+			{
+				free(t->content);
+				t->content = ft_strdup(s);
+			}
 			else
 			{
 				free(t->content);

@@ -2,7 +2,7 @@ NAME = minishell
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -16,7 +16,7 @@ RM = rm -rf
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $^ -o $(NAME) -lreadline
+	$(CC) $(CFLAGS)  $^ -o $(NAME) -lreadline
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
