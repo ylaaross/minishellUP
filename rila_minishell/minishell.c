@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/16 19:31:45 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/16 22:22:06 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	fifo_2(t_command_d **head, char* str, int v,int state)
 		(*head)->content = ft_strdup(str);
 		(*head)->token = v;
 		(*head)->state = state;
+		// printf("%s--%d--",(*head)->content,state);
 		(*head)->next = 0;
 	}
 	else
@@ -46,6 +47,7 @@ void	fifo_2(t_command_d **head, char* str, int v,int state)
 		t->next->content = ft_strdup(str);
 		t->next->token = v;
 		t->next->state = state;
+		// printf("--%d--",state);
 		t->next->next = 0;
 	}
 }
@@ -145,15 +147,6 @@ int ft_strlen_m(char *p, int i, int *v)
 	
 	(p[i] == '$' && (p[i + 1] && (ft_isalpha(p[i + 1]) || p[i + 1] == '_')))
 	)
-	
-	
-	// (p[i] == '$'  && (p[i + 1] && (!(p[i + 1] >= '0' && p[i + 1] <= '9') && p[i + 1] != '@' && p[i + 1] != '^' && p[i + 1] != '/' && p[i + 1] != '=' && p[i + 1] != '+' && p[i + 1] != '*'
-	// && p[i + 1] != '-' && p[i + 1] != '$' && p[i + 1] != '?')))
-	
-	
-	
-	
-
 	{
 		 if(p[i] == '|')
 			*v = PIPE;
@@ -265,8 +258,17 @@ char* split_parse_2(char *p,t_command_d	**t,int state)
 		v = 0;
 		s = 0;
 		s = cp(p, ft_strlen_m(p, i, &v), &i);
-		// printf("||%s||\n",s);
-		fifo_2(t,s, v, state);
+		if(v == REDIRECT)
+		{
+			
+			fifo_2(t, s, v, SSQUOTES);
+			printf("%s  %d",s,SSQUOTES);
+		}
+		else
+		{
+			printf("what");
+			fifo_2(t,s, v, state);
+		}
 	}
 	return(s);
 }
@@ -680,6 +682,7 @@ int		main(int argc, char* argv[], char* envp[])
 	t_env	* enva;
 	
 	p = 0;
+	exit_p = 0;
 	exit_s = 0;
 	(void)argc;
 	(void)argv;
@@ -696,13 +699,12 @@ int		main(int argc, char* argv[], char* envp[])
 		split_parse(read, &t);
 		
 		detect_state(t);
-		exit_p = exit_s;
 		if(DETECT_QUOTES2(t, &exit_s) && herdock_redirect_test(t, REDIRECT_IN,&exit_s) && herdock_redirect_test(t, REDIRECT, &exit_s) &&
 		herdock_redirect_test(t, REDIRECT_IN, &exit_s) && herdock_redirect_test(t, APPEND, &exit_s) && herdock_redirect_test(t, HERDOCK, &exit_s) && pipe_red_test(t , PIPE,&exit_s))
 		{
 			
-			printf("	content		|	token	|	state	\n");
-			printf("	______________________________________________\n");
+			// printf("	content		|	token	|	state	\n");
+			// printf("	______________________________________________\n");
 			t = expend(t, enva);
 			expend_exit(t, exit_p);
 			parse_200(t, &p);
@@ -715,30 +717,30 @@ int		main(int argc, char* argv[], char* envp[])
 
 
 			
-		// int i;
-		// while (p)
-		// {
+		int i;
+		while (p)
+		{
 			
-		// 	i = 0;
-		// 	printf("--------------cmd--------------\n");
-		// 	while (p->command[i])
-		// 	{
-		// 		printf("||%s||\n",p->command[i]);
-		// 		i++;	
-		// 	}
-		// 	printf("--------------file-------------\n");	
-		// 		while(p->file)
-		// 		{
-		// 			printf("%s    %d\n",p->file->file_name,p->file->type);
-		// 			p->file= p->file->next;	
-		// 		}
-		// 	printf("--------------next cmd---------\n");	
-		// 	p = p->next;
-		// }
-			if (check_builts(p->command[0]))
-				do_builtins(p->command);
-			else
-				do_command(p, &exit_s);
+			i = 0;
+			printf("--------------cmd--------------\n");
+			while (p->command[i])
+			{
+				printf("||%s||\n",p->command[i]);
+				i++;	
+			}
+			printf("--------------file-------------\n");	
+				while(p->file)
+				{
+					printf("%s    %d\n",p->file->file_name,p->file->type);
+					p->file= p->file->next;	
+				}
+			printf("--------------next cmd---------\n");	
+			p = p->next;
+		}
+			// if (check_builts(p->command[0]))
+			// 	do_builtins(p->command);
+			// else
+			// 	do_command(p, &exit_s);
 		}
 	}
 	return (0);

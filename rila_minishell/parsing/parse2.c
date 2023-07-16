@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:13:10 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/16 19:38:04 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/16 22:39:15 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,10 +204,10 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 			t = t->next;
 			i++;
 		}
-		else if (t && !test2(t) &&  !(t->token == SPACE && t->state == GENERALE) && !(t->token == TAB && t->state == GENERALE) && !(t->token == PIPE && t->state == GENERALE)) 
+		else if (t && !(test2(t) && t->state == GENERALE)  &&  !(t->token == SPACE && t->state == GENERALE) && !(t->token == TAB && t->state == GENERALE) && !(t->token == PIPE && t->state == GENERALE)) 
 		{
 			p->command[i] = calloc(1,sizeof(char));
-			while (t && !((t->token == SPACE || t->token == TAB) && t->state == GENERALE) && !(t->token == PIPE && t->state == GENERALE) && !(test2(t)))
+			while (t && !((t->token == SPACE || t->token == TAB) && t->state == GENERALE) && !(t->token == PIPE && t->state == GENERALE) && !(test2(t) && t->state == GENERALE))
 			{
 				
 				if (t && (t->state == SSQUOTES || t->state == SDQUOTES 
@@ -226,7 +226,7 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 			i++;
 			p->command[i] = 0;
 		}
-		else if (test2(t))
+		else if (test2(t) && t->state == GENERALE)
 		{
 			token = detect_token(t);
 			
@@ -236,7 +236,7 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 			while(t && (t->token == SPACE || t->token == TAB))
 				t = t->next;
 				s = calloc(1,sizeof(char));
-				while (t && !((t->token == SPACE || t->token == TAB) && t->state == GENERALE) && t->token != PIPE && !test2(t))
+				while (t && !((t->token == SPACE || t->token == TAB) && t->state == GENERALE) && t->token != PIPE )
 					{
 					if (t && (t->state == SSQUOTES || t->state == SDQUOTES 
 					|| (t->token != SQUOTES && t->state == GENERALE) ||
@@ -245,7 +245,10 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 					&&!(t->token == PIPE && t->state == GENERALE)
 					&& !(t->token == QUOTES && t->state == GENERALE)
 					&& !(t->token == SQUOTES && t->state == GENERALE))
+					{
+						printf("--%s--",t->content);
 						s = ft_strjoin(s, t->content);
+					}
 					if(t)
 					t = t->next;
 				}
