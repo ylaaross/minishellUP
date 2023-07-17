@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/16 22:22:06 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/17 20:08:21 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,11 +258,11 @@ char* split_parse_2(char *p,t_command_d	**t,int state)
 		v = 0;
 		s = 0;
 		s = cp(p, ft_strlen_m(p, i, &v), &i);
-		if(v == REDIRECT)
+		if(v == REDIRECT || v == REDIRECT_IN || v == HERDOCK || v == PIPE || v == APPEND)
 		{
 			
 			fifo_2(t, s, v, SSQUOTES);
-			printf("%s  %d",s,SSQUOTES);
+			// printf("%s  %d",s,SSQUOTES);
 		}
 		else
 		{
@@ -564,6 +564,7 @@ t_command_d	*	expend(t_command_d	*t, t_env	*enva)
 	int previoush;
 	int previous;
 	t_command_d		*tcp;
+	int 	inside;
 	
 	tcp = 0;
 	int i;
@@ -571,34 +572,14 @@ t_command_d	*	expend(t_command_d	*t, t_env	*enva)
 	init_expend(&previous, &previoush);
 	while(t)
 	{
+		inside = 0;
 		if(t->token == HERDOCK && t->state == GENERALE)
 		{
-			// printf("herdok\n");
 			fifo_2(&tcp, t->content, t->token, t->state);
-			// printf("||%s||\n",t->content);
 			previoush = 1;
 		}
-		// else if(test(t) && t->state == GENERALE)
-		// {
-			
-		// }
-		else if(previoush != 0 &&t->token != HERDOCK && (t->state != SDQUOTES || t->state != SSQUOTES))
-		{
-			// printf("quotes\n");
-			fifo_2(&tcp, t->content, t->token, t->state);
-			// printf("||%s||\n",t->content);
-			previous = 1;
-		}
-		else if(t->token == SPACE && (t->state != SDQUOTES || t->state != SSQUOTES) && previous == 1)
-		{
-			// printf("space\n");
-			fifo_2(&tcp, t->content, t->token, t->state);
-			// printf("||%s||\n",t->content);
-			init_expend(&previous, &previoush);
-		}	
 		else if(t->token == VARIABLE && previoush == 0 && (t->state == SDQUOTES))
 		{
-				// printf("variable\n");
 			s = 0;
 			s = find(t, enva);
 			if(s)
@@ -611,7 +592,6 @@ t_command_d	*	expend(t_command_d	*t, t_env	*enva)
 				free(t->content);
 				t->content = calloc(1, 1);
 			}
-			// printf("||%s||\n",t->content);
 			fifo_2(&tcp, t->content, t->token, SDQUOTES);
 		}
 		else if(t->token == VARIABLE && previoush == 0 && (t->state == GENERALE))
@@ -619,28 +599,33 @@ t_command_d	*	expend(t_command_d	*t, t_env	*enva)
 			s=0;
 			s = find(t, enva);
 			if(s)
-			{
-	
 				split_parse_2(s, &tcp, GENERALE);
-			}
 			else
+				fifo_2(&tcp, "", t->token, GENERALE);
+		}
+		else if(previoush == 1)
+		{
+			
+			while(t && ((t->token == TAB && t->state == GENERALE ) || (t->token == SPACE && t->state == GENERALE)))
 			{
 				
-				// free(t->content);
-				fifo_2(&tcp, "", t->token, GENERALE);
-				
+				inside = 1;
+				fifo_2(&tcp, t->content, t->token, t->state);
+				t = t->next;
 			}
-			
+			while(t && (!(t->token == TAB && t->state == GENERALE ) && !(t->token == SPACE && t->state == GENERALE)))
+			{
+				previoush = 0;
+				inside = 1;
+				fifo_2(&tcp, t->content, t->token, t->state);
+				t = t->next;
+			}
 		}
 		else
-		{
-			// printf("else\n");
-			// printf("||%s||\n",t->content);
 			fifo_2(&tcp, t->content, t->token, t->state);
-		}
-		// printf("%d",i);
 		i++;
-		t = t->next;
+		if(t && inside == 0)
+			t = t->next;
 	}
 	return (tcp);
 }
@@ -708,15 +693,6 @@ int		main(int argc, char* argv[], char* envp[])
 			t = expend(t, enva);
 			expend_exit(t, exit_p);
 			parse_200(t, &p);
-			
-			// while(t)
-			// {
-			// 	printf("%s    %d    %d\n",t->content,t->token,t->state);
-			// 	t=t->next;
-			// }
-
-
-			
 		int i;
 		while (p)
 		{
@@ -731,7 +707,7 @@ int		main(int argc, char* argv[], char* envp[])
 			printf("--------------file-------------\n");	
 				while(p->file)
 				{
-					printf("%s    %d\n",p->file->file_name,p->file->type);
+					printf("%s    %d  %d\n",p->file->file_name,p->file->type,p->file->state);
 					p->file= p->file->next;	
 				}
 			printf("--------------next cmd---------\n");	

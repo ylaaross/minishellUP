@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 20:26:02 by asaber            #+#    #+#             */
-/*   Updated: 2023/07/16 19:32:51 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/17 20:06:57 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ typedef struct command_devide
 
 typedef struct file
 {
-        char            *file_name;
+        int                     state;
+        char                    *file_name;
         int                     type;
         struct file *next;
 }t_file;
@@ -72,7 +73,7 @@ char    *cut_secound(char *env, char *first_env);
 char    *cut_first(char *env);
 char    *ft_strdup(char *s1);
 void    fifo(t_command_d **head, char* str, int v);
-t_file  *fifo_file(t_file *head, char* str, int v);
+t_file	*fifo_file(t_file *head, char* str, int v, int state);
 enum token{
         WORD = 1,
         SPACE = 2,
