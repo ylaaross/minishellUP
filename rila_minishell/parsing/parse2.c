@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:13:10 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/17 21:32:47 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/18 21:26:11 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,7 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 						&& !(t->token == QUOTES && t->state == GENERALE)
 						&& !(t->token == SQUOTES && t->state == GENERALE))
 						{
+							
 							if(t->token == QUOTES || t->token == SQUOTES)  	
 								state = 1;
 							s = ft_strjoin(s, t->content);

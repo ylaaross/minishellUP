@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/17 20:08:21 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/18 21:27:28 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,6 +335,7 @@ int	DETECT_QUOTES2(t_command_d *t, int *exit_s)
 		return(1);
 	}
 	*exit_s = 1;
+	printf("%d",*exit_s);
 	return(0);
 }
 int		DETECT_QUOTES(t_command_d	*t, int *exit_s)
@@ -496,7 +497,7 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 		}
 		if(t->token == search && t->state == GENERALE)
 			b_herdock++;
-		if((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD || t->token == VARIABLE)&& b_herdock >= 1) 	
+		if((t->token == QUOTES || t->token == SQUOTES ||t->token == WORD || t->token == VARIABLE || t->token == EXIT_STATUS)&& b_herdock >= 1) 	
 			b_herdock--;
 		t = t->next;
 	}
@@ -633,22 +634,31 @@ t_command_d	*	expend(t_command_d	*t, t_env	*enva)
 void	expend_exit(t_command_d	*t, int exit_s)
 {
 	int previoush;
-	int previous ;
-	
-	init_expend(&previous, &previoush);
+	int inside;
+
+	previoush = 0;
+	// init_expend(&previous, &previoush);
 	while(t)
 	{
-		if(t->token == HERDOCK)
+		inside = 0;
+		if(t->token == HERDOCK && t->state == GENERALE)
 			previoush = 1;
-		else if(previoush != 0 && t->token != HERDOCK && (t->state != SDQUOTES || t->state != SSQUOTES))
+		else if(previoush == 1 && t->token != SPACE && t->token != TAB)
 		{
-			previous = 1;
+			while(t && (!(t->token == SPACE && t->state == GENERALE) && !(t->token == TAB && t->state == GENERALE)))
+			{
+				inside = 1;
+				previoush = 0;
+				t = t->next;
+			}
 		}
-		else if(t->token == SPACE && (t->state != SDQUOTES || t->state != SSQUOTES) && previous == 1)
-			init_expend(&previous, &previoush);	
-		else if(t->token == EXIT_STATUS && previoush == 0 && (t->state == GENERALE || t->state == SDQUOTES))
-				t->content = ft_strdup(ft_itoa(exit_s));
-		t = t->next;
+		else if(previoush == 0 && (t->token == EXIT_STATUS && (t->state == GENERALE || t->state == SDQUOTES)))
+		{
+			free(t->content);
+			t->content = ft_strdup(ft_itoa(exit_s));
+		}
+		if(t && !inside)
+			t = t->next;
 	}
 }
 
@@ -684,12 +694,14 @@ int		main(int argc, char* argv[], char* envp[])
 		split_parse(read, &t);
 		
 		detect_state(t);
+		exit_p = exit_s;
 		if(DETECT_QUOTES2(t, &exit_s) && herdock_redirect_test(t, REDIRECT_IN,&exit_s) && herdock_redirect_test(t, REDIRECT, &exit_s) &&
 		herdock_redirect_test(t, REDIRECT_IN, &exit_s) && herdock_redirect_test(t, APPEND, &exit_s) && herdock_redirect_test(t, HERDOCK, &exit_s) && pipe_red_test(t , PIPE,&exit_s))
 		{
 			
 			// printf("	content		|	token	|	state	\n");
 			// printf("	______________________________________________\n");
+			
 			t = expend(t, enva);
 			expend_exit(t, exit_p);
 			parse_200(t, &p);
