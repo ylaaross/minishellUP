@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/18 21:27:28 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/20 20:30:41 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int count_words(t_command_d *t)
 	while(t)
 	{
 		
-		if(t->token == SPACE && t->state == GENERALE)
+		if((t->token == SPACE || t->token == TAB) && t->state == GENERALE)
 			b = 1;
 		else if(t->token != SPACE && b == 1)
 		{
@@ -230,7 +230,7 @@ char *cp(char *p, int lent, int *s)
 	return(c);
 }
 
-char* split_parse(char *p,t_command_d	**t)
+void split_parse(char *p,t_command_d	**t)
 {
 	int i;
 	char *s;
@@ -245,7 +245,8 @@ char* split_parse(char *p,t_command_d	**t)
 		fifo(t, s, v);
 		
 	}
-	return(s);
+	free(p);
+
 }
 char* split_parse_2(char *p,t_command_d	**t,int state)
 {
@@ -335,7 +336,6 @@ int	DETECT_QUOTES2(t_command_d *t, int *exit_s)
 		return(1);
 	}
 	*exit_s = 1;
-	printf("%d",*exit_s);
 	return(0);
 }
 int		DETECT_QUOTES(t_command_d	*t, int *exit_s)
@@ -472,15 +472,12 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 	int		b_herdock;
 	int		ex_word;
 	int		pos;
-	int 	h_pos;
 	int		c_red_herdock;
 	
 	pos = 0;
 	c_red_herdock = count(t, search);
 	ex_word = 0;
 	b_herdock = 0;
-
-	h_pos = herdock_pos(t, search);
 	if(c_red_herdock == 0)
 	{
 		*exit_s = 0;
@@ -488,8 +485,6 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 	}
 	while (t)
 	{
-		
-		
 		if(b_herdock >= 1 && test(t))
 		{
 			*exit_s = 258;
@@ -506,7 +501,6 @@ int herdock_redirect_test(t_command_d	*t ,int search,int *exit_s)
 		*exit_s = 0;
 		return(1);
 	}
-	
 	*exit_s = 258;
 	return(0);
 	
@@ -557,6 +551,18 @@ void init_expend(int *previous, int *previoush)
 }
 
 
+void	free_token(t_command_d	*t)
+{
+	t_command_d *tmp;
+
+	while(t)
+	{
+		tmp = t->next;
+		free(t->content);
+		free(t);
+		t = tmp;
+	}
+}
 
 t_command_d	*	expend(t_command_d	*t, t_env	*enva)
 {
@@ -564,12 +570,14 @@ t_command_d	*	expend(t_command_d	*t, t_env	*enva)
 	// int	pred;
 	int previoush;
 	int previous;
+	t_command_d		*tmp;
 	t_command_d		*tcp;
 	int 	inside;
 	
 	tcp = 0;
 	int i;
 	i = 0;
+	tmp = t;
 	init_expend(&previous, &previoush);
 	while(t)
 	{
@@ -626,8 +634,9 @@ t_command_d	*	expend(t_command_d	*t, t_env	*enva)
 			fifo_2(&tcp, t->content, t->token, t->state);
 		i++;
 		if(t && inside == 0)
-			t = t->next;
+			t = t->next;	
 	}
+	free_token(tmp);
 	return (tcp);
 }
 
@@ -667,6 +676,43 @@ void	expend_exit(t_command_d	*t, int exit_s)
 /// @param argv 
 /// @param envp 
 /// @return 
+
+// void herdok()
+// {
+	
+// }
+void free_files(t_pcommand_d	*p)
+{
+	t_file *file;
+	
+	while (p->file)
+	{
+		free(p->file->file_name);
+		free(p->file);
+		file = p->file->next;
+		p->file=file;
+	}
+}
+void	free_cmd_files(t_pcommand_d	*p)
+{
+	t_pcommand_d	*tmp;
+	int 			i;
+	
+	while (p)
+	{
+		i = 0;
+		while (p->command[i])
+		{
+			free (p->command[i]);
+			i++;	
+		}
+		// free(p->command);
+		// if(p->file)
+		// 	free_files (p);
+		tmp = p->next;
+		p = tmp;
+	}
+}
 int		main(int argc, char* argv[], char* envp[])
 {
 	int 			exit_s;
@@ -682,12 +728,13 @@ int		main(int argc, char* argv[], char* envp[])
 	(void)argc;
 	(void)argv;
 	Glob.env = __fill_env(envp);
+	enva = __fill_env(envp);
 	while (1)
 	{
 		t = 0;
 		
 		read = readline("minishell> ");
-		enva = __fill_env(envp);
+		
 		if (!read)
 			exit(0);
 		add_history(read);
@@ -701,35 +748,48 @@ int		main(int argc, char* argv[], char* envp[])
 			
 			// printf("	content		|	token	|	state	\n");
 			// printf("	______________________________________________\n");
-			
+			p = 0;
 			t = expend(t, enva);
 			expend_exit(t, exit_p);
-			parse_200(t, &p);
-		int i;
-		while (p)
-		{
 			
-			i = 0;
-			printf("--------------cmd--------------\n");
-			while (p->command[i])
-			{
-				printf("||%s||\n",p->command[i]);
-				i++;	
-			}
-			printf("--------------file-------------\n");	
-				while(p->file)
-				{
-					printf("%s    %d  %d\n",p->file->file_name,p->file->type,p->file->state);
-					p->file= p->file->next;	
-				}
-			printf("--------------next cmd---------\n");	
-			p = p->next;
-		}
+			// while(t)
+			// {
+			// 	printf("%s     %d     %d\n",t->content,t->token,t->state);
+			// 	t = t->next;
+			// }
+				
+			parse_200(t, &p);
+			free_token(t);
+			
+		// int i;
+		// while (p)
+		// {
+			
+		// 	i = 0;
+		// 	printf("--------------cmd--------------\n");
+		// 	while (p->command[i])
+		// 	{
+		// 		printf("||%s||\n",p->command[i]);
+		// 		i++;	
+		// 	}
+		// 	printf("--------------file-------------\n");	
+		// 		while(p->file)
+		// 		{
+		// 			printf("%s    %d  %d\n",p->file->file_name,p->file->type,p->file->state);
+		// 			p->file= p->file->next;	
+		// 		}
+		// 	printf("--------------next cmd---------\n");	
+		// 	p = p->next;
+		// }
+		free_cmd_files(p);
+			// free_cmd_files(p);
 			// if (check_builts(p->command[0]))
 			// 	do_builtins(p->command);
 			// else
 			// 	do_command(p, &exit_s);
 		}
+		else
+			write(2,"Syntax error\n",13);
 	}
 	return (0);
 }

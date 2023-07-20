@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 18:13:10 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/18 21:26:11 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/20 19:14:25 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,34 @@ int command_number(t_command_d *t)
 	}
 	return (count);
 }
+char	*ft_strjoin_parse(char *s1, char *s2)
+{
+	size_t		ls1;
+	size_t		ls2;
+	int			i;
+	char		*p;
+	int			j;
+
+	p = 0;
+	i = -1;
+	j = 0;
+	ls1 = ft_strlen(s1);
+	ls2 = ft_strlen(s2);
+	p = (char *)malloc(ls1 + ls2 + 1);
+	if (p == 0)
+	{
+		free(s1);
+		return (0);
+	}
+	while (s1[++i])
+		p[i] = s1[i];
+	p[i] = 0;
+	while (s2[j])
+	p[i++] = s2[j++];
+	p[i] = 0;
+	free(s1);
+	return (p);
+}
 
 void command_mallocate(t_command_d *t , t_pcommand_d **p)
 {
@@ -181,9 +209,7 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 				&&!(t->token == PIPE && t->state == GENERALE)
 				&& !(t->token == QUOTES && t->state == GENERALE)
 				&& !(t->token == SQUOTES && t->state == GENERALE))
-				{
-					p->command[i] = ft_strjoin(p->command[i], t->content);
-				}
+					p->command[i] = ft_strjoin_parse(p->command[i], t->content);
 				if (t)
 					t = t->next;
 			}
@@ -192,7 +218,6 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 		}
 		if (test2(t) && t->state == GENERALE)
 		{
-
 			while(test2(t))
 			{
 				state = 0;
@@ -203,6 +228,8 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 					s = calloc(1,sizeof(char));
 					while (t && !((t->token == SPACE || t->token == TAB) && t->state == GENERALE) && !(test2(t) && t->state == GENERALE) && t->token != PIPE )
 						{
+							if(t->token == QUOTES || t->token == SQUOTES)  	
+								state = 1;
 						if (t && (t->state == SSQUOTES || t->state == SDQUOTES 
 						|| (t->token != SQUOTES && t->state == GENERALE) ||
 						(t->token != QUOTES && t->state == GENERALE))
@@ -210,10 +237,7 @@ void parse_127(t_command_d *t, t_pcommand_d *p)
 						&& !(t->token == QUOTES && t->state == GENERALE)
 						&& !(t->token == SQUOTES && t->state == GENERALE))
 						{
-							
-							if(t->token == QUOTES || t->token == SQUOTES)  	
-								state = 1;
-							s = ft_strjoin(s, t->content);
+							s = ft_strjoin_parse(s, t->content);
 						}
 						if(t)
 						t = t->next;
