@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaber <asaber@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 17:34:20 by asaber            #+#    #+#             */
-/*   Updated: 2023/07/22 23:32:42 by asaber           ###   ########.fr       */
+/*   Updated: 2023/07/23 20:38:33 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	ft_cd(t_pcommand_d *cmd, int *status)
 			printf("minishell: cd: %s: %s\n", tmp, strerror(errno));
 			*status = 1;
 		}
-		free(tmp);
+		// free(tmp);
 	}
 	else
 	{
