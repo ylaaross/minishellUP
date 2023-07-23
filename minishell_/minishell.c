@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/23 17:34:23 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/07/23 18:10:50 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -633,6 +633,42 @@ t_command_d	*	expend(t_command_d	*t, t_env	*enva)
 	return (tcp);
 }
 
+void	expend_herdock(t_command_d	*t)
+{
+	char			*s;
+
+	while (t)
+	{
+		if (t->token == VARIABLE)
+		{
+			s = 0;
+			s = find(t, Glob.env);
+			if (s)
+			{
+				free(t->content);
+				t->content = ft_strdup(s);
+			}
+			else
+			{
+				free(t->content);
+				t->content = calloc(1, 1);
+			}
+		}
+		t = t->next;
+	}
+}
+char	*concat_herdock(t_command_d	*t)
+{
+	char	*join;
+
+	join = calloc(1, sizeof(char));
+	while (t)
+	{
+		join = ft_strjoin_parse(join, t->content);
+		t = t->next;
+	}
+	return (join);
+}
 void increment_expexit(t_command_d	**t, int *inside, int *previoush)
 {
 	*t = (*t)->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaber <asaber@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 20:26:02 by asaber            #+#    #+#             */
-/*   Updated: 2023/07/23 16:43:20 by asaber           ###   ########.fr       */
+/*   Updated: 2023/07/23 18:08:55 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,14 @@ int		isin_env(char *var);
 void	rm_node(t_env *env);
 int		isin_env(char *var);
 void	find_rm(int posision);
+void	        free_token(t_command_d	*t);
 int		heardoc_check(t_pcommand_d *cmd);
 int		do_heardoc(t_pcommand_d *cmd);
 int		command_check(t_pcommand_d *cmd);
-int 	redirect(t_pcommand_d *cmd);
+int 	        redirect(t_pcommand_d *cmd);
+void	        expend_herdock(t_command_d	*t);
+char	        *ft_strjoin_parse(char *s1, char *s2);
+char	        *concat_herdock(t_command_d	*t);
+void	split_parse(char *p, t_command_d	**t);
 t_shell         Glob;
 #endif
