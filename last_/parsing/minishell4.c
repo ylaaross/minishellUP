@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 19:20:55 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/08/02 17:50:38 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/08/02 19:34:45 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	pipe_red_test(t_command_d	*t, int SEARCH)
 	}
 	if (b_pipe >= 1)
 		return (1);
+	write(2, "minishell: syntax error\n", 24);
 	g_lob.exit_status = 2;
 	return (0);
 }

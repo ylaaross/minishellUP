@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaber <asaber@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 16:43:57 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/08/02 00:02:33 by asaber           ###   ########.fr       */
+/*   Updated: 2023/08/02 22:31:54 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	main(int argc, char *argv[], char *env[])
 	{
 		init_pointers(&tmp, &p);
 		read_split(&t);
-		if (test_cases(t))
+		if (test_cases(t) && test_ambiguiss(t))
 		{
 			expend_free(&t, &p);
 			parse_200(t, &p, &tmp);

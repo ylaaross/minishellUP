@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 22:19:37 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/08/02 17:50:56 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/08/02 19:30:36 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	test_cases(t_command_d	*t)
 		&& herdock_redirect_test(t, APPEND)
 		&& herdock_redirect_test(t, HERDOCK) && pipe_red_test(t, PIPE))
 		return (1);
-	write(2, "minishell: syntax error\n", 24);
 	free_token(t);
 	return (0);
 }

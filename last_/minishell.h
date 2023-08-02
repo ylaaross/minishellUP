@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaber <asaber@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 20:26:02 by asaber            #+#    #+#             */
-/*   Updated: 2023/08/02 00:10:25 by asaber           ###   ########.fr       */
+/*   Updated: 2023/08/02 22:34:37 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,4 +235,7 @@ void		signals(void);
 void		sig_handler(int sig);
 void		signals(void);
 void		def_signals(void);
+int			ft_count_a(char *s);
+int			loop(t_command_d	**t);
+int			test_ambiguiss(t_command_d	*t);
 #endif
