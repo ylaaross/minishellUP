@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 19:28:31 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/08/02 15:37:53 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/08/03 00:11:11 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ void	search2(t_command_d	*t, t_env	*enva, t_command_d **tcp)
 	s = 0;
 	s = find(t, enva);
 	if (s)
+	{
 		split_parse_2(s, tcp, GENERALE);
+		free(s);
+	}
 	else
 		fifo_2(tcp, "", t->token, GENERALE);
 }

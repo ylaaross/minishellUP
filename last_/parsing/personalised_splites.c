@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 23:27:44 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/07/31 18:31:30 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/08/03 00:14:21 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,15 @@ char	*split_parse_2(char *p, t_command_d	**t, int state)
 		s = cp(p, ft_strlen_m(p, i, &v), &i);
 		if (v == REDIRECT || v == REDIRECT_IN
 			|| v == HERDOCK || v == PIPE || v == APPEND)
+		{
 			fifo_2(t, s, v, SSQUOTES);
+			free(s);
+		}
 		else
+		{
 			fifo_2(t, s, v, state);
+			free(s);
+		}
 	}
 	return (s);
 }

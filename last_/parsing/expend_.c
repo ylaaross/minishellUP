@@ -1,37 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   expend_.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/01 23:59:40 by asaber            #+#    #+#             */
-/*   Updated: 2023/08/03 00:44:23 by ylaaross         ###   ########.fr       */
+/*   Created: 2023/08/03 00:23:51 by ylaaross          #+#    #+#             */
+/*   Updated: 2023/08/03 00:39:52 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include"../minishell.h"
 
-void	sig_handler(int sig)
+void	exp_(t_command_d	*t)
 {
-	if (sig == SIGINT)
-	{
-		write (2, "\n", 1);
-		rl_on_new_line();
-		rl_redisplay();
-		rl_replace_line("", 0);
-		g_lob.exit_status = 1;
-	}
+	char	*c;
+
+	c = ft_itoa(g_lob.exit_status);
+	t->content = ft_strdup(c);
+	free(c);
 }
 
-void	signals(void)
+void	init_pipe(int *existing_pipe, int *ex_word, int *b_pipe)
 {
-	signal (SIGINT, sig_handler);
-	signal (SIGQUIT, SIG_IGN);
-}
-
-void	def_signals(void)
-{
-	signal (SIGINT, SIG_DFL);
-	signal (SIGQUIT, SIG_DFL);
+	*existing_pipe = 1;
+	*ex_word = 0;
+	*b_pipe = *b_pipe - 1;
 }

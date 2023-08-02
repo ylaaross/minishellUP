@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 22:32:35 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/08/02 22:38:08 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/08/03 00:32:45 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	test_ambiguiss(t_command_d	*t)
 
 	red = 0;
 	c = 0;
-
 	while (t)
 	{
 		if ((t->token == REDIRECT || t->token == REDIRECT_IN

@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 20:26:02 by asaber            #+#    #+#             */
-/*   Updated: 2023/08/02 22:34:37 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/08/03 00:37:08 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,4 +238,6 @@ void		def_signals(void);
 int			ft_count_a(char *s);
 int			loop(t_command_d	**t);
 int			test_ambiguiss(t_command_d	*t);
+void		exp_(t_command_d	*t);
+void		init_pipe(int *existing_pipe, int *ex_word, int *b_pipe);
 #endif

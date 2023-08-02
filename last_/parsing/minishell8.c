@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 19:44:33 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/08/01 00:14:27 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/08/03 00:29:28 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	expend_exit(t_command_d	*t)
 		else if (previoush == 0 && (t->token == EXIT_STATUS
 				&& (t->state == GENERALE || t->state == SDQUOTES)))
 		{
-			free(t->content);
-			t->content = ft_strdup(ft_itoa(g_lob.exit_status));
+			free (t->content);
+			exp_ (t);
 		}
 		if (t && !inside)
 			t = t->next;

@@ -6,7 +6,7 @@
 /*   By: ylaaross <ylaaross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 19:20:55 by ylaaross          #+#    #+#             */
-/*   Updated: 2023/08/02 19:34:45 by ylaaross         ###   ########.fr       */
+/*   Updated: 2023/08/03 00:36:40 by ylaaross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,7 @@ int	pipe_red_test(t_command_d	*t, int SEARCH)
 			increment_init(&existing_pipe, &ex_word, &b_pipe);
 		else if (t->token == SEARCH && t->state != SDQUOTES
 			&& t->state != SSQUOTES)
-		{
-			existing_pipe = 1;
-			ex_word = 0;
-			b_pipe--;
-		}
+			init_pipe(&existing_pipe, &ex_word, &b_pipe);
 		t = t->next;
 	}
 	if (b_pipe >= 1)
